@@ -26,7 +26,7 @@ export const translations: Record<Locale, Record<string, string>> = {
     "app_settings.enable_analyses": "Activer les analyses",
     "app_settings.enable_analyses_hint":
       "Affiche le panneau Analyses (Dynamiques, Spatialisation, Structure, Tonalité). Inclut des graphes de calcul lourd destinés à une lecture avancée.",
-    "app.title": "Spektrum — Visualiseur de spectrogramme audio",
+    "app.title": "Spektrum – Visualiseur de spectrogramme audio",
     "app_settings.debug_section": "Mode debug",
     "app_settings.debug_mode": "Activer le mode debug",
     "app_settings.debug_mode_hint":
@@ -381,8 +381,7 @@ export const translations: Record<Locale, Record<string, string>> = {
     "info.sel_peak_at": "Pic à",
     "info.sel_peak_zoom_hint": "Zoomer sur le pic",
     "info.sel_max_active_freq": "Fréquence maximale détectée",
-    "info.sel_threshold_hint":
-      "Plancher utilisateur : {floor} dB",
+    "info.sel_threshold_hint": "Plancher utilisateur : {floor} dB",
     "info.sel_coverage": "Trames × bins",
     "selection.cancel_hint": "Échap pour annuler",
 
@@ -557,7 +556,7 @@ export const translations: Record<Locale, Record<string, string>> = {
     "app_settings.enable_spectrogram_3d": "Enable 3D spectrogram",
     "app_settings.enable_spectrogram_3d_hint":
       "Loads the WebGL 3D spectrogram view. Non-trivial memory / GPU cost.",
-    "app.title": "Spektrum — Audio spectrogram viewer",
+    "app.title": "Spektrum – Audio spectrogram viewer",
     "app_settings.debug_section": "Debug mode",
     "app_settings.debug_mode": "Enable debug mode",
     "app_settings.debug_mode_hint":
