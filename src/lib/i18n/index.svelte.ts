@@ -11,6 +11,11 @@ function detectLocale(): Locale {
 
 function createI18n() {
   let locale = $state<Locale>(detectLocale());
+  // Tracks whether the current value comes from a user choice (settings
+  // modal) rather than the auto-detected default. Persistence layers
+  // should only restore an explicit value, otherwise the freshly
+  // detected browser language wins on every visit.
+  let explicit = $state(false);
 
   function t(key: string, params?: Record<string, string | number>): string {
     const str = translations[locale]?.[key] ?? translations[DEFAULT_LOCALE]?.[key] ?? key;
@@ -23,7 +28,20 @@ function createI18n() {
       return locale;
     },
     set locale(v: Locale) {
-      if (SUPPORTED_LOCALES.includes(v)) locale = v;
+      if (SUPPORTED_LOCALES.includes(v)) {
+        locale = v;
+        explicit = true;
+      }
+    },
+    get explicit() {
+      return explicit;
+    },
+    /** Restore a persisted locale without flipping the explicit flag. */
+    setFromPersist(v: Locale): void {
+      if (SUPPORTED_LOCALES.includes(v)) {
+        locale = v;
+        explicit = true;
+      }
     },
     get locales() {
       return SUPPORTED_LOCALES;

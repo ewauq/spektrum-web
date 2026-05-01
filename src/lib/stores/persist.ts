@@ -430,7 +430,7 @@ export async function loadSettings(): Promise<void> {
       if (u.hpssShowGrid != null) uiStore.hpssShowGrid = u.hpssShowGrid;
     }
 
-    if (data.locale) i18n.locale = data.locale;
+    if (data.locale) i18n.setFromPersist(data.locale);
   } catch {
     /* first launch or corrupted file */
   }
@@ -561,7 +561,7 @@ export async function saveSettings(): Promise<void> {
       hpssView: uiStore.hpssView,
       hpssShowGrid: uiStore.hpssShowGrid
     },
-    locale: i18n.locale
+    locale: i18n.explicit ? i18n.locale : undefined
   };
 
   try {
