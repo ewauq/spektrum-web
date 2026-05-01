@@ -3,10 +3,8 @@
   import { devWarn } from "$lib/log";
   import Logo from "./Logo.svelte";
 
-  let {
-    version = "",
-    onClose,
-  }: { version?: string; onClose: () => void } = $props();
+  let { version = "", onClose }: { version?: string; onClose: () => void } =
+    $props();
 
   function onBackdropClick(e: MouseEvent) {
     if (e.target === e.currentTarget) onClose();
@@ -62,8 +60,9 @@
     <div class="credits">
       <div>
         {t("about.created_by")}
-        <button class="link" onclick={() => openLink("https://github.com/ewauq")}
-          >ewauq</button
+        <button
+          class="link"
+          onclick={() => openLink("https://github.com/ewauq")}>ewauq</button
         >
       </div>
       <div>
@@ -92,7 +91,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--sp-sm);
     padding: var(--sp-xl) calc(var(--sp-xl) * 1.5);
     background: var(--c-surface-raised);
     border: 1px solid var(--c-border);
