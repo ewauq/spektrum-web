@@ -6,9 +6,34 @@
     type AxisFontFamily,
     type CursorInfoMode,
   } from "$lib/stores/ui.svelte";
+  import { downloadDebugLog, clearDebugLog } from "$lib/debug/log";
   import ColorInput from "./ColorInput.svelte";
   import Select from "./ui/Select.svelte";
   import Toggle from "./ui/Toggle.svelte";
+
+  let logBusy = $state(false);
+  let logCount = $state<number | null>(null);
+
+  async function onDownloadLog() {
+    if (logBusy) return;
+    logBusy = true;
+    try {
+      logCount = await downloadDebugLog();
+    } finally {
+      logBusy = false;
+    }
+  }
+
+  async function onClearLog() {
+    if (logBusy) return;
+    logBusy = true;
+    try {
+      await clearDebugLog();
+      logCount = 0;
+    } finally {
+      logBusy = false;
+    }
+  }
 
 
   const axisFontOptions = $derived.by(() => [
@@ -250,6 +275,33 @@
               <p class="hint">
                 {t("app_settings.debug_mode_hint")}
               </p>
+              {#if uiStore.debugMode}
+                <div class="log-actions">
+                  <button
+                    class="log-btn"
+                    onclick={onDownloadLog}
+                    disabled={logBusy}
+                  >
+                    {t("app_settings.debug_log_download")}
+                  </button>
+                  <button
+                    class="log-btn"
+                    onclick={onClearLog}
+                    disabled={logBusy}
+                  >
+                    {t("app_settings.debug_log_clear")}
+                  </button>
+                  {#if logCount !== null}
+                    <span class="log-count">
+                      {logCount === 0
+                        ? t("app_settings.debug_log_empty")
+                        : t("app_settings.debug_log_count", {
+                            count: String(logCount),
+                          })}
+                    </span>
+                  {/if}
+                </div>
+              {/if}
             </div>
           </section>
         {/if}
@@ -498,5 +550,40 @@
   .reset:hover {
     background: var(--c-border-hover);
     color: var(--c-text);
+  }
+
+  .log-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--sp-sm);
+    margin-top: var(--sp-xs);
+  }
+
+  .log-btn {
+    padding: var(--sp-xs) var(--sp-md);
+    background: var(--c-border);
+    border: 1px solid var(--c-border-hover);
+    color: var(--c-text-accent);
+    border-radius: var(--r-md);
+    font-family: inherit;
+    font-size: var(--fs-sm);
+    cursor: pointer;
+  }
+
+  .log-btn:hover:not(:disabled) {
+    background: var(--c-border-hover);
+    color: var(--c-text);
+  }
+
+  .log-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .log-count {
+    color: var(--c-text-muted);
+    font-size: var(--fs-sm);
+    font-family: var(--font-mono);
   }
 </style>
