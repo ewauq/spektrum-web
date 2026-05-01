@@ -6,13 +6,11 @@
     onOpenFile,
     onCloseFile,
     onAppSettings,
-    onQuit,
     canClose = false,
   }: {
     onOpenFile: () => void;
     onCloseFile: () => void;
     onAppSettings: () => void;
-    onQuit: () => void;
     canClose?: boolean;
   } = $props();
 </script>
@@ -51,17 +49,6 @@
       }}
     >
       {t("titlebar.app_settings")}
-    </button>
-    <div class="menu-separator" role="separator"></div>
-    <button
-      class="menu-item"
-      role="menuitem"
-      onclick={() => {
-        close();
-        onQuit();
-      }}
-    >
-      {t("titlebar.quit")}
     </button>
   {/snippet}
 </MenuButton>

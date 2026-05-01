@@ -37,7 +37,6 @@
       {onOpenFile}
       {onCloseFile}
       {onAppSettings}
-      onQuit={() => {}}
       canClose={hasFile}
     />
     <ViewMenu bind:viewWaveform disabled={!hasFile} />
