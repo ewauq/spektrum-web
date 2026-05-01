@@ -23,7 +23,11 @@ const config = {
       mode: 'hash',
       directives: {
         'default-src': ['self'],
-        'script-src': ['self', 'wasm-unsafe-eval'],
+        // regl JIT-compiles GLSL bindings via the Function constructor,
+        // which falls under unsafe-eval (wasm-unsafe-eval covers only
+        // WebAssembly.compile et al.). Keep both: WASM is hot for the
+        // FLAC/MP3 decoders, eval for the WebGL rendering hot loop.
+        'script-src': ['self', 'wasm-unsafe-eval', 'unsafe-eval'],
         'style-src': ['self', 'unsafe-inline'],
         'img-src': ['self', 'data:', 'blob:'],
         'worker-src': ['self', 'blob:'],
