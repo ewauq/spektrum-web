@@ -504,6 +504,11 @@
       return;
     }
     activeStftCancel = null;
+    // Force a fresh reference so downstream consumers (RegionStats,
+    // analyses) re-derive on the now-populated magnitudes — the worker
+    // mutates the Float32Array in place, which Svelte's shallow $state
+    // reactivity does not detect.
+    stftRef = { ...result };
     perfStore.setStft(performance.now() - stftStart);
     perfStore.setMemStft(result.magnitudes.byteLength);
     taskStore.end(stftTaskId);
