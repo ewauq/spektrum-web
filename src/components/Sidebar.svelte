@@ -16,7 +16,7 @@
   const MAX_WIDTH = 720;
   const STORAGE_KEY = 'spektrum.sidebarWidth';
 
-  let width = $state(300);
+  let width = $state(320);
   let widthInitialized = false;
 
   $effect.pre(() => {
