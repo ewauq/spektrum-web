@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import { t } from "$lib/i18n/index.svelte";
   import { uiStore } from "$lib/stores/ui.svelte";
   import ShortcutsPanel from "./ShortcutsPanel.svelte";
@@ -26,10 +25,6 @@
   } = $props();
 
   const version = import.meta.env.VITE_APP_VERSION ?? "0.1.0";
-
-  onMount(() => {
-    document.title = `Spektrum v${version}`;
-  });
 </script>
 
 <div class="bar">

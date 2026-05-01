@@ -10,6 +10,7 @@
   $effect(() => {
     if (typeof document !== "undefined") {
       document.documentElement.lang = i18n.locale;
+      document.title = i18n.t("app.title");
     }
   });
 

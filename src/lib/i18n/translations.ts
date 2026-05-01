@@ -26,6 +26,7 @@ export const translations: Record<Locale, Record<string, string>> = {
     "app_settings.enable_analyses": "Activer les analyses",
     "app_settings.enable_analyses_hint":
       "Affiche le panneau Analyses (Dynamiques, Spatialisation, Structure, Tonalité). Inclut des graphes de calcul lourd destinés à une lecture avancée.",
+    "app.title": "Spektrum — Visualiseur de spectrogramme audio",
     "app_settings.debug_section": "Mode debug",
     "app_settings.debug_mode": "Activer le mode debug",
     "app_settings.debug_mode_hint":
@@ -556,6 +557,7 @@ export const translations: Record<Locale, Record<string, string>> = {
     "app_settings.enable_spectrogram_3d": "Enable 3D spectrogram",
     "app_settings.enable_spectrogram_3d_hint":
       "Loads the WebGL 3D spectrogram view. Non-trivial memory / GPU cost.",
+    "app.title": "Spektrum — Audio spectrogram viewer",
     "app_settings.debug_section": "Debug mode",
     "app_settings.debug_mode": "Enable debug mode",
     "app_settings.debug_mode_hint":
