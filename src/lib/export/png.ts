@@ -27,6 +27,15 @@ export interface ExportOptions {
   exportMarkers?: boolean;
   freqTop?: number;
   freqBottom?: number;
+  /**
+   * Clip the dB legend to a sub-range of [dbFloor, dbCeiling]. The
+   * colormap mapping (and image pixels) still uses the full range; only
+   * the gradient bar and ticks drawn in the legend are restricted to
+   * this slice. Used by region exports to reflect the actual dB span
+   * present in the cropped area.
+   */
+  legendDbFloor?: number;
+  legendDbCeiling?: number;
 }
 
 const BORDER_PX = 40;
@@ -71,6 +80,8 @@ function drawLegend(
 ) {
   const floor = opts.dbFloor ?? -140;
   const ceiling = opts.dbCeiling ?? 0;
+  const legendFloor = opts.legendDbFloor ?? floor;
+  const legendCeiling = opts.legendDbCeiling ?? ceiling;
   const name = opts.colormap ?? 'viridis';
   const lut =
     name === 'custom' && opts.customStops
@@ -80,9 +91,16 @@ function drawLegend(
   const barW = 14;
   const barX = x + 12;
 
+  // The image pixels colour-map through [floor, ceiling]. When the
+  // legend slice is narrower we still pick LUT indices from that
+  // mapping so the colours displayed in the bar match the colours
+  // actually present in the cropped image.
+  const colormapSpan = Math.max(1e-9, ceiling - floor);
   for (let py = 0; py < height; py++) {
     const t = 1 - py / height;
-    const idx = Math.max(0, Math.min(255, Math.round(t * 255)));
+    const db = legendFloor + t * (legendCeiling - legendFloor);
+    const idxT = (db - floor) / colormapSpan;
+    const idx = Math.max(0, Math.min(255, Math.round(idxT * 255)));
     ctx.fillStyle = `rgb(${lut[idx * 4]},${lut[idx * 4 + 1]},${lut[idx * 4 + 2]})`;
     ctx.fillRect(barX, y + py, barW, 1);
   }
@@ -90,12 +108,12 @@ function drawLegend(
   ctx.strokeStyle = 'rgba(139,148,181,0.2)';
   ctx.strokeRect(barX, y, barW, height);
 
-  const ticks = niceTicks(floor, ceiling, Math.max(3, Math.floor(height / 50)));
+  const ticks = niceTicks(legendFloor, legendCeiling, Math.max(3, Math.floor(height / 50)));
   ctx.font = FONT;
   ctx.fillStyle = TEXT_COLOR;
   ctx.textBaseline = 'middle';
   for (const db of ticks) {
-    const frac = (db - floor) / (ceiling - floor);
+    const frac = (db - legendFloor) / (legendCeiling - legendFloor);
     const ty = y + height - frac * height;
     if (ty >= y && ty <= y + height) {
       ctx.fillStyle = 'rgba(139,148,181,0.35)';

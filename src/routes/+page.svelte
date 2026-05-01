@@ -178,6 +178,44 @@
     }
   }
 
+  function regionDbRange(
+    stft: import("$lib/dsp/stft").StftResult,
+    timeStart: number,
+    timeEnd: number,
+    freqStart: number,
+    freqEnd: number,
+  ): { minDb: number; maxDb: number } | null {
+    const { magnitudes, freqBins, sampleRate, hopSize, fftSize, timeFrames } =
+      stft;
+    const nyquist = sampleRate / 2;
+    const t1 = Math.min(timeStart, timeEnd);
+    const t2 = Math.max(timeStart, timeEnd);
+    const f1 = Math.min(freqStart, freqEnd);
+    const f2 = Math.max(freqStart, freqEnd);
+    const frameOf = (t: number) =>
+      Math.round((t * sampleRate - fftSize / 2) / hopSize);
+    const fStart = Math.max(0, frameOf(t1));
+    const fEnd = Math.min(timeFrames, Math.max(fStart + 1, frameOf(t2)));
+    const kStart = Math.max(0, Math.round((f1 / nyquist) * (freqBins - 1)));
+    const kEnd = Math.min(
+      freqBins - 1,
+      Math.max(kStart, Math.round((f2 / nyquist) * (freqBins - 1))),
+    );
+    const sentinel = stft.dbFloor;
+    let minDb = Infinity;
+    let maxDb = -Infinity;
+    for (let f = fStart; f < fEnd; f++) {
+      for (let k = kStart; k <= kEnd; k++) {
+        const v = magnitudes[f * freqBins + k];
+        if (v <= sentinel) continue;
+        if (v < minDb) minDb = v;
+        if (v > maxDb) maxDb = v;
+      }
+    }
+    if (!Number.isFinite(minDb) || !Number.isFinite(maxDb)) return null;
+    return { minDb, maxDb };
+  }
+
   async function handleExportSelection() {
     if (!canvasRef || !selection || exportBusy || !audio) return;
     exportBusy = true;
@@ -200,11 +238,28 @@
         1,
         ((selection.freqEnd - selection.freqStart) / nyquist) * plotH,
       );
+      const baseOpts = getExportOpts();
+      const range = stftRef
+        ? regionDbRange(
+            stftRef,
+            selection.timeStart,
+            selection.timeEnd,
+            selection.freqStart,
+            selection.freqEnd,
+          )
+        : null;
+      const opts = range
+        ? {
+            ...baseOpts,
+            legendDbFloor: range.minDb,
+            legendDbCeiling: range.maxDb,
+          }
+        : baseOpts;
       await exportRegionPng(
         canvasRef,
         { x, y, width: w, height: h },
         `${baseName(audio.path)}-selection.${imgExt()}`,
-        getExportOpts(),
+        opts,
       );
     } finally {
       taskStore.end(taskId);
