@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; worker-src 'self' blob:; connect-src 'self'; font-src 'self' data:"
+    />
+    <link rel="icon" type="image/x-icon" href="%sveltekit.assets%/favicon.ico" />
+    <style>
+      @font-face {
+        font-family: "Carter One";
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: url("%sveltekit.assets%/fonts/CarterOne-Regular.woff2") format("woff2");
+      }
+    </style>
+    <title>Spektrum</title>
+    %sveltekit.head%
+  </head>
+  <body>
+    <div style="display: contents">%sveltekit.body%</div>
+  </body>
+</html>
