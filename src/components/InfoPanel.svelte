@@ -12,8 +12,7 @@
     sectionMoveHandlers,
   } from "$lib/stores/section-order";
   import { formatDuration } from "$lib/format";
-  import { fileName, dirName } from "$lib/path";
-  import { devWarn } from "$lib/log";
+  import { fileName } from "$lib/path";
   import Section from "./ui/Section.svelte";
   import InfoTable, { type InfoRow } from "./ui/InfoTable.svelte";
   import RegionStats from "./RegionStats.svelte";
@@ -32,8 +31,6 @@
     if (n >= 1_000) return `${(n / 1_000).toFixed(1)} k`;
     return String(n);
   }
-
-  async function openFolder(_filePath: string) {}
 
   const ORDER_KEY = "spektrum.info.order";
   const DEFAULT_ORDER = [
@@ -66,15 +63,6 @@
         kind: "row",
         key: t("info.file_name"),
         cell: { kind: "text", value: fileName(audio.path), bold: true },
-      },
-      {
-        kind: "row",
-        key: t("info.file_folder"),
-        cell: {
-          kind: "link",
-          value: dirName(audio.path),
-          onClick: () => openFolder(audio.path),
-        },
       },
       {
         kind: "row",
