@@ -122,6 +122,8 @@ function drawAxes(
 ) {
   const sr = opts.sampleRate ?? 44100;
   const nyquist = sr / 2;
+  const fBottom = opts.freqBottom ?? 0;
+  const fTop = opts.freqTop ?? nyquist;
   const tStart = opts.timeStart ?? 0;
   const tEnd = opts.timeEnd ?? 1;
 
@@ -132,11 +134,11 @@ function drawAxes(
   ctx.font = FONT;
   ctx.fillStyle = TEXT_COLOR;
 
-  const freqTicks = niceTicks(0, nyquist, Math.max(4, Math.floor(h / 40)));
+  const freqTicks = niceTicks(fBottom, fTop, Math.max(4, Math.floor(h / 40)));
   ctx.textAlign = 'right';
   ctx.textBaseline = 'middle';
   for (const hz of freqTicks) {
-    const fy = oy + h - (hz / nyquist) * h;
+    const fy = oy + h - ((hz - fBottom) / (fTop - fBottom)) * h;
     if (fy >= oy && fy <= oy + h) {
       ctx.fillStyle = 'rgba(139,148,181,0.35)';
       ctx.fillRect(ox - 4, fy, 4, 1);
@@ -353,15 +355,27 @@ export async function exportRegionPng(
   const withMarkers = hasVisibleMarkers(opts);
   const needsCompose = opts.legend || opts.border || withMarkers;
 
-  const effective: ExportOptions = withMarkers
-    ? (() => {
-        const nyq = (opts.sampleRate ?? 44100) / 2;
-        const canvasH = source.height;
-        const freqTop = nyq * (1 - region.y / canvasH);
-        const freqBottom = nyq * (1 - (region.y + h) / canvasH);
-        return { ...opts, freqTop, freqBottom };
-      })()
-    : opts;
+  // Translate the pixel region back into time / frequency coordinates
+  // so the legend axes drawn around the cropped image reflect the
+  // selection's actual extent. opts already carries the visible
+  // window's full range; we shift it by (region.x, region.y).
+  const nyq = (opts.sampleRate ?? 44100) / 2;
+  const canvasW = source.width;
+  const canvasH = source.height;
+  const visibleStart = opts.timeStart ?? 0;
+  const visibleEnd = opts.timeEnd ?? 1;
+  const visibleRange = visibleEnd - visibleStart;
+  const regionTimeStart = visibleStart + (region.x / canvasW) * visibleRange;
+  const regionTimeEnd = visibleStart + ((region.x + w) / canvasW) * visibleRange;
+  const regionFreqTop = nyq * (1 - region.y / canvasH);
+  const regionFreqBottom = nyq * (1 - (region.y + h) / canvasH);
+  const effective: ExportOptions = {
+    ...opts,
+    timeStart: regionTimeStart,
+    timeEnd: regionTimeEnd,
+    freqTop: regionFreqTop,
+    freqBottom: regionFreqBottom
+  };
 
   const target = needsCompose
     ? composeExport(source, { x: region.x, y: region.y, w, h }, effective)
