@@ -4,6 +4,61 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/x-icon" href="%sveltekit.assets%/favicon.ico" />
+    <link rel="canonical" href="https://ewauq.github.io/spektrum-web/" />
+
+    <title>Spektrum — Visualiseur de spectrogramme audio</title>
+    <meta
+      name="description"
+      content="Visualiseur de spectrogramme audio FLAC et MP3 dans le navigateur. Analyse temps-fréquence par STFT, formes d'onde, marqueurs, palettes personnalisables, export PNG et CSV. Décodage 100 % côté client, aucun upload."
+    />
+    <meta name="author" content="ewauq" />
+    <meta
+      name="keywords"
+      content="spectrogramme, spectrogram, STFT, audio, FLAC, MP3, analyseur audio, audio analyzer, visualiseur, time-frequency, waveform, mastering, fréquence, regl, WebGL"
+    />
+    <meta name="theme-color" content="#0c0d12" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="robots" content="index, follow" />
+
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="Spektrum — Visualiseur de spectrogramme audio"
+    />
+    <meta
+      property="og:description"
+      content="Visualiseur de spectrogramme audio FLAC et MP3 dans le navigateur. Analyse temps-fréquence par STFT, formes d'onde, marqueurs, export PNG et CSV. Décodage 100 % côté client, aucun upload."
+    />
+    <meta property="og:site_name" content="Spektrum" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:locale:alternate" content="en_US" />
+    <meta property="og:url" content="https://ewauq.github.io/spektrum-web/" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta
+      name="twitter:title"
+      content="Spektrum — Visualiseur de spectrogramme audio"
+    />
+    <meta
+      name="twitter:description"
+      content="Spectrogramme STFT temps-fréquence FLAC/MP3 dans le navigateur. Décodage 100 % côté client, aucun upload."
+    />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Spektrum",
+        "applicationCategory": "MultimediaApplication",
+        "operatingSystem": "Any (web browser)",
+        "description": "Visualiseur de spectrogramme audio FLAC et MP3 dans le navigateur, analyse temps-fréquence par STFT, formes d'onde, marqueurs, export PNG et CSV.",
+        "url": "https://ewauq.github.io/spektrum-web/",
+        "author": { "@type": "Person", "name": "ewauq" },
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+        "inLanguage": ["fr", "en"]
+      }
+    </script>
+
     <style>
       @font-face {
         font-family: "Carter One";
@@ -13,7 +68,6 @@
         src: url("%sveltekit.assets%/fonts/CarterOne-Regular.woff2") format("woff2");
       }
     </style>
-    <title>Spektrum</title>
     %sveltekit.head%
   </head>
   <body>
