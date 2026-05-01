@@ -14,6 +14,22 @@ const config = {
     }),
     prerender: {
       entries: ['*']
+    },
+    // SvelteKit emet un <meta http-equiv="Content-Security-Policy"> dans
+    // chaque page prérendue, en hashant les <script> inline qu'il injecte
+    // lui-même (bootstrap d'hydratation). Mode 'hash' marche pour le
+    // build statique (pas de nonce serveur disponible).
+    csp: {
+      mode: 'hash',
+      directives: {
+        'default-src': ['self'],
+        'script-src': ['self', 'wasm-unsafe-eval'],
+        'style-src': ['self', 'unsafe-inline'],
+        'img-src': ['self', 'data:', 'blob:'],
+        'worker-src': ['self', 'blob:'],
+        'connect-src': ['self'],
+        'font-src': ['self', 'data:']
+      }
     }
   }
 };
