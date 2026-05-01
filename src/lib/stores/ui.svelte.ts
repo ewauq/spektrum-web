@@ -118,8 +118,8 @@ function createUiStore() {
   let rmsReferenceLevel = $state<RmsReferenceLevel>('off');
   let expandedPanelId = $state<string | null>(null);
   let cursorInfoMode = $state<CursorInfoMode>('dock');
-  let enableSpectrogram3d = $state(true);
-  let enableAnalyses = $state(true);
+  let enableSpectrogram3d = $state(false);
+  let enableAnalyses = $state(false);
   let debugMode = $state(false);
 
   let avgSpectrumColorScheme = $state<RmsColorScheme>('spektrum');

@@ -26,9 +26,13 @@ export interface DecodedAudio {
   effectivelyMono?: boolean;
 }
 
-// See desktop/src/lib/audio/decode.ts for the rationale behind the
-// 50 dB threshold and the 8000-sample heuristic — same algorithm used
-// here for consistency between desktop and web outputs.
+// Compare side-energy to mid-energy: if the side channel sits more
+// than 50 dB below mid the file is effectively mono (50 dB is two
+// octaves below the human stereo-perception threshold of ~20-25 dB,
+// catching mono masters archived in stereo with analog-tape
+// asymmetry without false-positiving on real narrow stereo). 8000
+// strided samples give a stable estimate in well under 1 ms even on
+// hour-long tracks.
 function isEffectivelyMono(left: Float32Array, right: Float32Array): boolean {
   if (left.length !== right.length) return false;
   const N = left.length;

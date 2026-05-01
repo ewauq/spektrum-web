@@ -1,22 +1,11 @@
-/**
- * File picker + drag-drop helpers for the web shell. Both paths
- * funnel into the file-registry so the rest of the app keeps believing
- * it works with paths/handles.
- */
-
 import { registerFile } from './file-registry';
 
 const ACCEPT = '.flac,.mp3,audio/flac,audio/mpeg';
 
-/**
- * Open the native browser file picker. Resolves with the registry
- * handle (the file's name) or null if the user cancelled.
- * The Promise stays unresolved indefinitely if the user closes the
- * dialog without picking — there is no reliable cancel event in the
- * File API, so callers should be ready for that. We mitigate by
- * resolving null on the next focus event after `change` fires
- * without files (best-effort cancel detection).
- */
+// The File API has no reliable cancel event. We resolve null on the
+// next focus tick after `change` failed to fire — best-effort, will
+// briefly delay a successful pick by 250 ms before the listener
+// rejects via `settled`.
 export function pickAudioFile(): Promise<string | null> {
   return new Promise((resolve) => {
     const input = document.createElement('input');
@@ -34,9 +23,6 @@ export function pickAudioFile(): Promise<string | null> {
       settle(file ? registerFile(file) : null);
       input.remove();
     });
-    // Best-effort cancel detection: the focus event fires when the OS
-    // dialog closes. If `change` hasn't fired by the next tick, treat
-    // it as cancel.
     window.addEventListener(
       'focus',
       () => {
@@ -49,11 +35,6 @@ export function pickAudioFile(): Promise<string | null> {
   });
 }
 
-/**
- * Wire drag-and-drop on the given element. Filters by accepted
- * extensions (.flac, .mp3) and registers the dropped file, then
- * invokes the callback with the handle. Returns a teardown function.
- */
 export function attachDragDrop(
   el: HTMLElement,
   onFile: (handle: string) => void

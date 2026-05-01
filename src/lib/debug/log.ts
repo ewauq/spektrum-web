@@ -1,10 +1,3 @@
-/**
- * Minimal stub of the debug log API used across stores. The web
- * implementation will write to IndexedDB and expose a "Download log"
- * button (Phase 4.3). For now everything goes to console.* to keep the
- * type-check + dev flow alive.
- */
-
 import { dev } from '$app/environment';
 
 type Level = 'info' | 'warn' | 'error';
@@ -32,9 +25,9 @@ export function buildKind(): 'dev' | 'release' {
 }
 
 export async function getDebugLogPath(): Promise<string> {
-  return 'browser:indexeddb (à venir)';
+  return '';
 }
 
 export async function getDebugLogDir(): Promise<string> {
-  return 'browser:indexeddb (à venir)';
+  return '';
 }

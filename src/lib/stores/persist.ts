@@ -1,14 +1,5 @@
 import { devWarn } from '$lib/log';
 
-/**
- * Web persistence: localStorage under a single key, same JSON shape
- * as the desktop's plugin-store payload so the data is portable
- * between the two platforms when we eventually consolidate behind
- * @spektrum/core.
- *
- * Window geometry helpers are no-ops on web (the browser handles
- * window state itself).
- */
 const STORAGE_KEY = 'spektrum:settings';
 const DEBOUNCE_MS = 500;
 
@@ -581,8 +572,4 @@ export async function saveSettings(): Promise<void> {
   }
 }
 
-// No-op on web: the browser handles window geometry. Kept to match
-// the desktop API surface so callers don't need conditional logic.
-export async function saveWindowGeometry(): Promise<void> {}
-export async function restoreWindowGeometry(): Promise<void> {}
 

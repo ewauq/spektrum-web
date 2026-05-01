@@ -1,13 +1,3 @@
-/**
- * Maps a user-friendly handle (the file's name) to the in-memory Blob
- * picked via <input type="file"> or drag-drop. The audio store keeps
- * only the handle string so the rest of the app keeps believing it
- * works with paths.
- *
- * On collision (user opens two files with the same name) we append a
- * counter so each Blob retains its own slot.
- */
-
 const registry = new Map<string, Blob>();
 
 export function registerFile(file: File): string {
